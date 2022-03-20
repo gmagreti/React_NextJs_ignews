@@ -9,15 +9,12 @@ interface SubscribeButtonProps {
 
 export function SubscribeButton({ priceId }: SubscribeButtonProps) {
   const [session] = useSession();
-
   async function handleSubscribe() {
-    // Se nao houver uma session ele direciona para o login (Github)
     if (!session) {
       signIn('github');
       return;
     }
 
-    // Criação da checkout session
     try {
       const response = await api.post('/subscribe');
 
@@ -26,15 +23,15 @@ export function SubscribeButton({ priceId }: SubscribeButtonProps) {
       const stripe = await getStripeJs();
 
       await stripe.redirectToCheckout({ sessionId });
-    } catch (err) {
-      alert(err.message);
+    } catch (error) {
+      alert(error.message);
     }
   }
   return (
     <button
       type="button"
       className={styles.subscribeButton}
-      onClick={handleSubscribe}
+      onClick={() => handleSubscribe()}
     >
       Subscribe now
     </button>
