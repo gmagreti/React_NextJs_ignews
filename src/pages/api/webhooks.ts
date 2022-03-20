@@ -26,10 +26,10 @@ const relevantEvents = new Set([
   'customer.subscription.deleted',
 ]);
 
-export default async (request: NextApiRequest, response: NextApiResponse) => {
-  if (request.method === 'POST') {
-    const buf = await buffer(request);
-    const secret = request.headers['stripe-signature'];
+export default async (req: NextApiRequest, res: NextApiResponse) => {
+  if (req.method === 'POST') {
+    const buf = await buffer(req);
+    const secret = req.headers['stripe-signature'];
 
     let event: Stripe.Event;
 
@@ -39,8 +39,9 @@ export default async (request: NextApiRequest, response: NextApiResponse) => {
         secret,
         process.env.STRIPE_WEBHOOK_SECRET
       );
-    } catch (err) {
-      return response.status(400).send(`Webhook error: ${err.message}`);
+    } catch (error) {
+      console.log('43', error);
+      return res.status(400).send(`Webhook error: ${error.message}`);
     }
 
     const { type } = event;
@@ -51,6 +52,8 @@ export default async (request: NextApiRequest, response: NextApiResponse) => {
           case 'customer.subscription.updated':
           case 'customer.subscription.deleted':
             const subscription = event.data.object as Stripe.Subscription;
+
+            console.log('56', subscription.customer.toString());
             await saveSubscription(
               subscription.id,
               subscription.customer.toString(),
@@ -66,19 +69,18 @@ export default async (request: NextApiRequest, response: NextApiResponse) => {
               checkoutSession.customer.toString(),
               true
             );
-
             break;
           default:
             throw new Error('Unhandled event.');
         }
-      } catch (err) {
-        return response.json({ error: 'Webhook handler failed' });
+      } catch (error) {
+        return res.json({ error: 'Webhook handler failed.' });
       }
     }
 
-    response.json({ received: true });
+    res.json({ received: true });
   } else {
-    response.setHeader('Allow', 'POST');
-    response.status(405).send('Method not allowed');
+    res.setHeader('Allow', 'POST');
+    res.status(405).end('Method not allowed');
   }
 };
