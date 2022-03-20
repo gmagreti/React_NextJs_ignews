@@ -2,8 +2,9 @@ import NextAuth from 'next-auth';
 import Providers from 'next-auth/providers';
 
 import { query as q } from 'faunadb';
-
 import { fauna } from '../../../services/fauna';
+
+// import { fauna } from '../../../services/fauna';
 
 export default NextAuth({
   providers: [
@@ -14,6 +15,10 @@ export default NextAuth({
     }),
   ],
 
+  // Gerar Chave JWT com o passo a passo na documentacao
+  // jwt: {
+  //   signingKey: process.env.SIGNING_KEY,
+  // },
   callbacks: {
     async signIn(user, account, profile) {
       const { email, name } = user;
