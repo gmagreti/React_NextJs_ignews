@@ -1,6 +1,11 @@
 .headerContainer {
+  position: sticky;
+  top: 0;
+
   height: 5rem;
   border-bottom: 1px solid #29292e;
+
+  background: var(--gray-900);
 }
 
 .headerContent {
