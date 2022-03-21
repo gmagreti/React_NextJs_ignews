@@ -43,3 +43,28 @@
     }
   }
 }
+
+.buttonArrowTop {
+  width: 3rem;
+  height: 3rem;
+  border-radius: 50%;
+  background: var(--gray-850);
+  border: 0;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--white);
+
+  font-weight: bold;
+
+  position: fixed;
+  right: 20px;
+  bottom: 20px;
+
+  transition: filter 0.2s;
+
+  &:hover {
+    filter: brightness(0.8);
+  }
+}
