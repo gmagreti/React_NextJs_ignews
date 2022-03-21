@@ -40,7 +40,6 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
         process.env.STRIPE_WEBHOOK_SECRET
       );
     } catch (error) {
-      console.log('43', error);
       return res.status(400).send(`Webhook error: ${error.message}`);
     }
 
@@ -53,7 +52,6 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
           case 'customer.subscription.deleted':
             const subscription = event.data.object as Stripe.Subscription;
 
-            console.log('56', subscription.customer.toString());
             await saveSubscription(
               subscription.id,
               subscription.customer.toString(),
